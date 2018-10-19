@@ -39,6 +39,7 @@ In =xmonad.hs= add the hotkeys to control Pomobar. A configuration example is sh
     , ((modm  , xK_F6      ), spawn "dbus-send --print-reply --dest=org.pomobar /org/pomobar org.Pomobar.pauseResumeTimer")
     , ((modm  , xK_F7      ), spawn "dbus-send --print-reply --dest=org.pomobar /org/pomobar org.Pomobar.timerAddMin int16:1")
     , ((modm  , xK_F8      ), spawn "dbus-send --print-reply --dest=org.pomobar /org/pomobar org.Pomobar.timerAddMin int16:-1")
+    , ((modm  , xK_F9      ), spawn "dbus-send --print-reply --dest=org.pomobar /org/pomobar org.Pomobar.stopTimer")
 #+END_SRC
 
 ** =pomobar= options

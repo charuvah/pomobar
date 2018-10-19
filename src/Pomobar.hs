@@ -62,6 +62,15 @@ initialise timerConfig = do
   putStrLn "Pb"
   waitForever
 
+reinitialise :: Timer -> IO ()
+reinitialise timer@(Timer mvarState timerConfig) = do
+  pauseTimer timer
+  hSetBuffering stdout LineBuffering
+  timer <- newTimer timerConfig
+  startDBus timer
+  putStrLn "Pb"
+  waitForever
+
 newTimer :: TimerConfig -> IO Timer
 newTimer timerConfig = do
   thread <- newEmptyMVar
@@ -180,6 +189,7 @@ startDBus timer@(Timer mvarState _) = do
     [
       autoMethod "org.Pomobar" "startTimer" dbusStart,
       autoMethod "org.Pomobar" "pauseResumeTimer" dbusPauseResume,
+      autoMethod "org.Pomobar" "stopTimer" dbusStop,
       autoMethod "org.Pomobar" "timerAddMin" dbusTimerAdd,
       autoMethod "org.Pomobar" "startTimerSwitch" (dbusStartTimerSwitch timerSwitchState)
     ]
@@ -191,6 +201,7 @@ startDBus timer@(Timer mvarState _) = do
             Running -> pauseTimer timer
             Paused  -> resumeTimer timer
             _       -> return ()
+        dbusStop = reinitialise timer
         dbusTimerAdd :: Int16 -> IO()
         dbusTimerAdd = timerAdd timer . fromIntegral
         dbusStartTimerSwitch :: MVar Int -> [Int16] -> IO ()
